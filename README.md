@@ -14,7 +14,7 @@
 
 Displays tweets by given url params.
 
-Example Tweet: `http://localhost:3000/?n= &u= &m= &v= &p= &r= &q= &l= &d= &s=`
+Example Tweet: `http://berikai.github.io/tweet-displayer/?n= &u= &m= &v= &p= &r= &q= &l= &d= &s=`
  - n: Name
  - u: Userame
  - m: Message
