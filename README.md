@@ -14,6 +14,18 @@
 
 Displays tweets by given url params.
 
+Example Tweet: `http://localhost:3000/?n= &u= &m= &v= &p= &r= &q= &l= &d= &s=`
+ - n: Name
+ - u: Userame
+ - m: Message
+ - v: isVerified (1 or 0)
+ - p: Profile Picture URL
+ - r: Retweets Count
+ - q: Quotes Count
+ - l: Likes Count
+ - d: Unixtime
+ - s: Source
+
 ## Live Demo
 
 See it live [here](https://berikai.github.io/tweet-displayer).
