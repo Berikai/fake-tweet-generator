@@ -1,20 +1,49 @@
+//Berikai's edit
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
+// Use %0A for new line and use %20 for whitespaces.
+
+// Get the value of "some_key" in eg "https://example.com/?some_key=some_value&other_key=other_value"
+// let value = params.some_key; // "some_value"
+
+// Example Tweet: http://localhost:3000/?n= &u= &m= &v= &p= &r= &q= &l= &d= &s=
+// http://localhost:3000/?n=Naame&u=username&m=Message&v=1&p=http://pbs.twimg.com/profile_images/1597187803443519488/C0c_0eTn_400x400.jpg&r=12&q=1&l=123&d=1672581389000&s=Twitter%20Test%20App
+
+// Month names
+const MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
 // User input's DOM elements
-const avatar = document.getElementById('avatar');
+const avatar = params.p;
 const fileName = document.getElementById('file-name');
 const reset = document.getElementById('reset');
-const fullname = document.getElementById('name');
-const username = document.getElementById('username');
-const message = document.getElementById('message');
-const time = document.getElementById('time');
-const date = document.getElementById('date');
-const client = document.getElementById('client');
-const retweets = document.getElementById('retweets');
-const quotes = document.getElementById('quotes');
-const likes = document.getElementById('likes');
+const fullname = params.n;
+const username = params.u;
+const message = params.m;
+const time = getCurrentTime(params.d);
+const date = getCurrentDate(params.d);
+const client = params.s;
+const retweets = params.r;
+const quotes = params.q;
+const likes = params.l;
 
 // Capturing all Radio buttons
 const themeRadios = document.getElementsByName('theme_radio');
-const verifiedRadios = document.getElementsByName('verified_radio');
+const verifiedRadios = params.v == 1 ? true : false;
 
 // Preview's DOM elements
 const tweetBox = document.getElementById('tweet_box');
@@ -33,22 +62,6 @@ const tweetLikes = document.getElementById('tweet_likes');
 
 // Capturing Download button
 const download = document.getElementById('download');
-
-// Month names
-const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
 
 // Theme
 let themeColor = '#ffffff';
@@ -87,10 +100,8 @@ function showFileName(name) {
 
 // Render Profile Picture in Tweet
 function renderProfilePicture() {
-  const [file] = avatar.files;
-  if (file) {
-    showFileName(file.name);
-    tweetAvatar.src = URL.createObjectURL(file);
+  if (avatar) {
+    tweetAvatar.src = avatar;
   }
 }
 
@@ -103,39 +114,32 @@ function resetProfilePicture() {
 
 // Render Name in Tweet
 function renderName() {
-  const nameValue = fullname.value.trim();
+  const nameValue = fullname.trim();
 
   if (nameValue === '') {
     tweetName.innerText = 'Name';
   } else {
     tweetName.innerText = nameValue;
   }
-
-  const characterCountEl = fullname.nextElementSibling.querySelector('.count');
-  characterCountEl.innerText = nameValue.length;
 }
 
 // Render Username in Tweet
 function renderUsername() {
-  const usernameValue = username.value.trim();
+  const usernameValue = username.trim();
 
   if (usernameValue === '') {
     tweetUsername.innerText = 'username';
   } else {
     tweetUsername.innerText = usernameValue;
   }
-
-  const characterCountEl =
-    username.parentElement.nextElementSibling.querySelector('.count');
-  characterCountEl.innerText = usernameValue.length;
 }
 
 // Render Message in Tweet
 function renderMessage() {
-  const messageValue = message.value.trim();
+  const messageValue = message.trim();
 
   if (messageValue === '') {
-    tweetMessage.innerText = 'Generate convincing fake tweet images';
+    tweetMessage.innerText = 'Displays tweets by given url params.';
   } else {
     tweetMessage.innerText = '';
     messageValue.split(' ').forEach((token) => {
@@ -168,16 +172,11 @@ function renderMessage() {
     // To preserve line breaks
     tweetMessage.innerHTML = tweetMessage.innerHTML.replace(/\n/g, '<br>\n');
   }
-
-  let test = `hey there @shashi how are you?`;
-
-  const characterCountEl = message.nextElementSibling.querySelector('.count');
-  characterCountEl.innerText = messageValue.length;
 }
 
 // Render Time in Tweet
 function renderTime() {
-  const timeValue = time.value.trim();
+  const timeValue = time.trim();
 
   if (timeValue === '') {
     tweetTime.innerText = getCurrentTime();
@@ -188,7 +187,7 @@ function renderTime() {
 
 // Render Date in Tweet
 function renderDate() {
-  const dateValue = date.value.trim();
+  const dateValue = date.trim();
 
   if (dateValue === '') {
     tweetDate.innerText = getCurrentDate();
@@ -199,7 +198,7 @@ function renderDate() {
 
 // Render Client in Tweet
 function renderClient() {
-  const clientValue = client.value.trim();
+  const clientValue = client.trim();
 
   if (clientValue === '') {
     tweetClient.innerText = 'Twitter Web App';
@@ -211,7 +210,7 @@ function renderClient() {
 // Render Retweets in Tweet
 function renderRetweets() {
   tweetRetweets.parentElement.classList.remove('hide');
-  let retweetsValue = retweets.value;
+  let retweetsValue = retweets;
 
   if (retweetsValue === '') {
     tweetRetweets.innerText = '96';
@@ -232,7 +231,7 @@ function renderRetweets() {
 // Render Quotes in Tweet
 function renderQuotes() {
   tweetQuotes.parentElement.classList.remove('hide');
-  let quotesValue = quotes.value;
+  let quotesValue = quotes;
 
   if (quotesValue === '') {
     tweetQuotes.innerText = '88';
@@ -253,7 +252,7 @@ function renderQuotes() {
 // Render Likes in Tweet
 function renderLikes() {
   tweetLikes.parentElement.classList.remove('hide');
-  let likesValue = likes.value;
+  let likesValue = likes;
 
   if (likesValue === '') {
     tweetLikes.innerText = '153';
@@ -272,8 +271,12 @@ function renderLikes() {
 }
 
 // Returns current Time
-function getCurrentTime() {
-  const dateObj = new Date();
+function getCurrentTime(arg) {
+  let dateObj;
+  if (arg)
+    dateObj = new Date(Number(arg));
+  else
+    dateObj = new Date();
   let hours = +dateObj.getHours();
   let minutes = ('00' + dateObj.getMinutes()).slice(-2);
   let suffix;
@@ -296,8 +299,12 @@ function getCurrentTime() {
 }
 
 // Returns current Date
-function getCurrentDate() {
-  const dateObj = new Date();
+function getCurrentDate(arg) {
+  let dateObj;
+  if (arg)
+    dateObj = new Date(Number(arg));
+  else
+    dateObj = new Date();
   const day = dateObj.getDate();
   const month = dateObj.getMonth();
   const year = dateObj.getFullYear();
@@ -332,15 +339,7 @@ function toggleTheme(ev) {
 
 // Toggle Verified Badge
 function toggleVerified() {
-  let choice;
-
-  for (let i = 0; i < verifiedRadios.length; i++) {
-    if (verifiedRadios[i].checked) {
-      choice = verifiedRadios[i].value;
-    }
-  }
-
-  if (choice === 'show') {
+  if (verifiedRadios) {
     tweetVerified.classList.remove('hide');
   } else {
     tweetVerified.classList.add('hide');
@@ -391,6 +390,16 @@ function takeScreenshot() {
 
 // Set Timestamp when page is loaded
 function setTimestamp() {
+  renderName();
+  renderUsername();
+  renderMessage();
+  toggleVerified();
+  renderProfilePicture();
+  renderClient();
+  renderRetweets();
+  renderQuotes();
+  renderLikes();
+
   renderTime();
   renderDate();
 }
@@ -399,23 +408,9 @@ function setTimestamp() {
 setTimestamp();
 
 // Event Listeners
-avatar.addEventListener('change', renderProfilePicture);
-reset.addEventListener('click', resetProfilePicture);
-fullname.addEventListener('input', renderName);
-username.addEventListener('input', renderUsername);
-message.addEventListener('input', renderMessage);
-time.addEventListener('input', renderTime);
-date.addEventListener('input', renderDate);
-client.addEventListener('input', renderClient);
-retweets.addEventListener('input', renderRetweets);
-quotes.addEventListener('input', renderQuotes);
-likes.addEventListener('input', renderLikes);
+
 download.addEventListener('click', takeScreenshot);
 
 for (let i = 0; i < themeRadios.length; i++) {
   themeRadios[i].addEventListener('change', toggleTheme);
-}
-
-for (let i = 0; i < verifiedRadios.length; i++) {
-  verifiedRadios[i].addEventListener('change', toggleVerified);
 }
